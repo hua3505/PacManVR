@@ -5,6 +5,7 @@ using System.Collections;
 public class PacMan : MonoBehaviour {
 
 	public GameObject _camera;
+	public GameObject _pacmanModel;
 	public GameObject messageCanvas;
 	public Text messageText;
 
@@ -18,9 +19,14 @@ public class PacMan : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//		MoveByGvrController ();
-		MoveByKeyboard();
 		UpdateStatusMessage ();
+		transform.rotation = _camera.transform.rotation;
+		_camera.transform.position = transform.position;
+	}
+
+	void FixedUpdate() {
+		//		MoveByGvrController ();
+		MoveByKeyboard();
 	}
 
 	void MoveByGvrController() {
@@ -39,8 +45,8 @@ public class PacMan : MonoBehaviour {
 
 	void MoveByKeyboard() {
 		Vector3 force = new Vector3 ();
-		force.x = Input.GetAxis ("Vertical");
-		force.z = Input.GetAxis ("Horizontal");
+		force.z = Input.GetAxis ("Vertical");
+		force.x = Input.GetAxis ("Horizontal");
 		force.y = 0;
 		_rigidbody.AddRelativeForce (force);
 	}
