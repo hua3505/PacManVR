@@ -48,7 +48,7 @@ public class PacMan : MonoBehaviour {
 		force.z = Input.GetAxis ("Vertical");
 		force.x = Input.GetAxis ("Horizontal");
 		force.y = 0;
-		_rigidbody.AddRelativeForce (force);
+		_rigidbody.AddRelativeForce (force * 10);
 	}
 
 	private void UpdateStatusMessage() {
