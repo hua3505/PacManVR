@@ -8,8 +8,10 @@ public class PacMan : MonoBehaviour {
 	public GameObject _pacmanModel;
 	public GameObject messageCanvas;
 	public Text messageText;
+	public Text _scoreText;
 
 	private Rigidbody _rigidbody;
+	private int _collectedBeansNum = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -82,5 +84,19 @@ public class PacMan : MonoBehaviour {
 			Debug.LogError("Invalid controller state: " + GvrController.State);
 			break;
 		}
+	}
+
+	void OnTriggerEnter(Collider collider) {
+		print ("OnTriggerEnter");
+		print (collider.gameObject.tag);
+		if (collider.gameObject.tag.Equals("Bean")) {
+			Destroy (collider.gameObject);
+			_collectedBeansNum++;
+			updateScoreText ();
+		}
+	}
+
+	void updateScoreText() {
+		_scoreText.text = "Score: " + _collectedBeansNum;
 	}
 }
