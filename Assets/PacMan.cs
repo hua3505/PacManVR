@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PacMan : MonoBehaviour {
@@ -87,16 +88,22 @@ public class PacMan : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider) {
-		print ("OnTriggerEnter");
-		print (collider.gameObject.tag);
-		if (collider.gameObject.tag.Equals("Bean")) {
+		string tag = collider.gameObject.tag;
+		print ("OnTriggerEnter " + tag);
+		if (tag.Equals ("Bean")) {
 			Destroy (collider.gameObject);
 			_collectedBeansNum++;
 			updateScoreText ();
+		} else if (tag.Equals ("Ghost")) {
+			LossGame ();
 		}
 	}
 
 	void updateScoreText() {
 		_scoreText.text = "Score: " + _collectedBeansNum;
+	}
+
+	void LossGame() {
+		SceneManager.LoadScene ("GameOver");
 	}
 }
