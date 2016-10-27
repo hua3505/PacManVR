@@ -14,6 +14,8 @@ public class Ghost : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		_agent.SetDestination (_pacMan.transform.position);
+		if (_agent.remainingDistance <= 0) {
+			_agent.SetDestination (_pacMan.transform.position);
+		}
 	}
 }
