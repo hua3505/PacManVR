@@ -13,6 +13,7 @@ public class PacMan : MonoBehaviour {
 
 	private Rigidbody _rigidbody;
 	private int _collectedBeansNum = 0;
+    private int _killedGhostNum = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -90,18 +91,40 @@ public class PacMan : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		string tag = collider.gameObject.tag;
 		print ("OnTriggerEnter " + tag);
-		if (tag.Equals ("Bean")) {
-			Destroy (collider.gameObject);
-			_collectedBeansNum++;
-			updateScoreText ();
-		} else if (tag.Equals ("Ghost")) {
-			LossGame ();
-		}
+        if (tag.Equals("Bean")) {
+            Destroy(collider.gameObject);
+            _collectedBeansNum++;
+            updateScoreText();
+        } else if (tag.Equals("PowerBean")) {
+            handleEatPowerBean();
+        } else if (tag.Equals("Ghost")) {
+            handleCollideGhost(collider.gameObject);
+        }
 	}
 
 	void updateScoreText() {
-		_scoreText.text = "Score: " + _collectedBeansNum;
+        int score = _collectedBeansNum + _killedGhostNum * 2;
+		_scoreText.text = "Score: " + score;
 	}
+
+    void handleEatPowerBean() {
+        GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
+        foreach (GameObject ghost in ghosts)
+        {
+            ghost.GetComponent<Ghost>().beScared();
+        }
+    }
+
+    void handleCollideGhost(GameObject ghost) {
+        Ghost ghostController = ghost.GetComponent<Ghost>();
+        if (ghostController.getState() == Ghost.State.NORMAL) {
+            LossGame();
+        } else {
+            // TODO: 改为身体消失，然后跑回复活点
+            _killedGhostNum++;
+            Destroy(ghost);
+        }
+    }
 
 	void LossGame() {
 		SceneManager.LoadScene ("GameOver");
