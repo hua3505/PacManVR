@@ -10,15 +10,19 @@ public class PacMan : MonoBehaviour {
 	public GameObject messageCanvas;
 	public Text messageText;
 	public Text _scoreText;
+	public Text _winText;
 
 	private Rigidbody _rigidbody;
 	private int _collectedBeansNum = 0;
     private int _killedGhostNum = 0;
+	private int _totalBeansNum;
 
 	// Use this for initialization
 	void Start () {
 		_rigidbody = GetComponent<Rigidbody> ();
-	    
+		_totalBeansNum = GameObject.FindGameObjectsWithTag ("Bean").Length;
+		print ("total beans: " + _totalBeansNum);
+
 	}
 	
 	// Update is called once per frame
@@ -92,11 +96,15 @@ public class PacMan : MonoBehaviour {
 		string tag = collider.gameObject.tag;
 		print ("OnTriggerEnter " + tag);
         if (tag.Equals("Bean")) {
-            Destroy(collider.gameObject);
+            
             _collectedBeansNum++;
             updateScoreText();
+			if (_collectedBeansNum >= _totalBeansNum) {
+				_winText.enabled = true;
+			}
+			Destroy(collider.gameObject);
         } else if (tag.Equals("PowerBean")) {
-            handleEatPowerBean();
+			handleEatPowerBean(collider.gameObject);
         } else if (tag.Equals("Ghost")) {
             handleCollideGhost(collider.gameObject);
         }
@@ -107,7 +115,8 @@ public class PacMan : MonoBehaviour {
 		_scoreText.text = "Score: " + score;
 	}
 
-    void handleEatPowerBean() {
+	void handleEatPowerBean(GameObject powerBean) {
+		Destroy (powerBean);
         GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
         foreach (GameObject ghost in ghosts)
         {

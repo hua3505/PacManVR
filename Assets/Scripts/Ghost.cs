@@ -8,6 +8,7 @@ public class Ghost : MonoBehaviour {
 	private GameObject _pacMan;
     private GameObject _normalGhost;
     private GameObject _scaredGhost;
+	private GameObject _base;
     private State _state = State.NORMAL;
 
     public enum State
@@ -23,13 +24,16 @@ public class Ghost : MonoBehaviour {
 		_pacMan = GameObject.FindGameObjectWithTag ("PacMan");
         _normalGhost = transform.GetChild(0).gameObject;
         _scaredGhost = transform.GetChild(1).gameObject;
+		_base = GameObject.Find ("BaseOfGhost");
 
     }
 	
 	// Update is called once per frame
 	void Update () {
 		if (_agent.remainingDistance <= 0) {
-			_agent.SetDestination (_pacMan.transform.position);
+			if (_state == State.NORMAL) {
+				_agent.SetDestination (_pacMan.transform.position);
+			}
 		}
 	}
 
@@ -42,12 +46,17 @@ public class Ghost : MonoBehaviour {
         _state = State.SCARED;
         _normalGhost.SetActive(false);
         _scaredGhost.SetActive(true);
+		CancelInvoke ("toNormalState");
         Invoke("toNormalState", _scaredTime);
         // run away
+		if (_base != null) {
+			_agent.SetDestination (_base.transform.position);
+		}
     }
 
     void toNormalState()
     {
+		print ("toNormalState");
         _normalGhost.SetActive(true);
         _scaredGhost.SetActive(false);
         _state = State.NORMAL;
