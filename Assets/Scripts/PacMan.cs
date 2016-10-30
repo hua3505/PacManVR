@@ -120,7 +120,7 @@ public class PacMan : MonoBehaviour {
         GameObject[] ghosts = GameObject.FindGameObjectsWithTag("Ghost");
         foreach (GameObject ghost in ghosts)
         {
-            ghost.GetComponent<Ghost>().beScared();
+            ghost.GetComponent<Ghost>().BeScared();
         }
     }
 
@@ -128,10 +128,9 @@ public class PacMan : MonoBehaviour {
         Ghost ghostController = ghost.GetComponent<Ghost>();
         if (ghostController.getState() == Ghost.State.NORMAL) {
             LossGame();
-        } else {
-            // TODO: 改为身体消失，然后跑回复活点
+		} else if (ghostController.getState() == Ghost.State.SCARED) {
             _killedGhostNum++;
-            Destroy(ghost);
+			ghostController.BeKilled();
         }
     }
 
