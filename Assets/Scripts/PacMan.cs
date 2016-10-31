@@ -28,13 +28,15 @@ public class PacMan : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		UpdateStatusMessage ();
-		transform.rotation = _camera.transform.rotation;
+		transform.rotation = Quaternion.Euler(0, _camera.transform.rotation.eulerAngles.y, 0);
 		_camera.transform.position = transform.position;
-	}
+        
+
+    }
 
 	void FixedUpdate() {
-		//		MoveByGvrController ();
-		MoveByKeyboard();
+        MoveByGvrController();
+        MoveByKeyboard();
 	}
 
 	void MoveByGvrController() {
@@ -43,10 +45,10 @@ public class PacMan : MonoBehaviour {
 				Vector2 touchPos = GvrController.TouchPos;
 				print ("touchPos: " + touchPos.x + "," + touchPos.y);
 				Vector3 force = new Vector3 ();
-				force.x = touchPos.x;
-				force.z = touchPos.y;
+				force.x = touchPos.x - 0.5f;
+				force.z = 0.5f - touchPos.y;
 				force.y = 0;
-				_rigidbody.AddRelativeForce (force);
+				_rigidbody.AddRelativeForce (force * 20);
 			}
 		}
 	}
