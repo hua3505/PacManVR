@@ -2,7 +2,9 @@
 
 public class Ghost : MonoBehaviour {
 
-    public int _scaredTime;
+    public float _scaredTime;
+    public float _startBlinkTimeAfterScared;
+    public float _blinkInterval;
 
 	private NavMeshAgent _agent;
 	private GameObject _pacMan;
@@ -54,14 +56,16 @@ public class Ghost : MonoBehaviour {
         _scaredGhost.SetActive(true);
 		CancelInvoke ("ToNormalState");
 		Invoke("ToNormalState", _scaredTime);
+        Invoke("Blink", _startBlinkTimeAfterScared);
         // run away
-		if (_base != null) {
+        if (_base != null) {
 			_agent.SetDestination (_base.transform.position);
 		}
     }
 
 	public void BeKilled() {
-		_state = State.DEAD;
+        CancelInvoke("Blink");
+        _state = State.DEAD;
 		CancelInvoke ("ToNormalState");
 		_scaredGhostBody.SetActive (false);
 		_scaredGhostMouth.SetActive (false);
@@ -73,11 +77,30 @@ public class Ghost : MonoBehaviour {
 
     void ToNormalState()
     {
-		print ("ToNormalState");
+        CancelInvoke("Blink");
+        print ("ToNormalState");
         _normalGhost.SetActive(true);
         _scaredGhost.SetActive(false);
         _state = State.NORMAL;
 
+    }
+
+    void Blink()
+    {
+        if (_state == State.SCARED)
+        {
+            if (_normalGhost.activeInHierarchy)
+            {
+                _normalGhost.SetActive(false);
+                _scaredGhost.SetActive(true);
+            }
+            else
+            {
+                _normalGhost.SetActive(true);
+                _scaredGhost.SetActive(false);
+            }
+            Invoke("Blink", _blinkInterval);
+        }
     }
 
 	void Reborn() {
