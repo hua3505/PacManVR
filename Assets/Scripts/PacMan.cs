@@ -5,7 +5,9 @@ using System.Collections;
 
 public class PacMan : MonoBehaviour {
 
-	public GameObject _camera;
+    private static int MAX_SPEED = 4;
+
+    public GameObject _camera;
 	public GameObject _pacmanModel;
 	public GameObject messageCanvas;
 	public Text messageText;
@@ -30,13 +32,22 @@ public class PacMan : MonoBehaviour {
 		UpdateStatusMessage ();
 		transform.rotation = Quaternion.Euler(0, _camera.transform.rotation.eulerAngles.y, 0);
 		_camera.transform.position = transform.position;
-        
 
     }
 
-	void FixedUpdate() {
+    void FixedUpdate() {
         MoveByGvrController();
         MoveByKeyboard();
+        if (_rigidbody.velocity.magnitude > MAX_SPEED)
+        {
+            _rigidbody.velocity = _rigidbody.velocity.normalized * MAX_SPEED;
+
+        }
+        if (_rigidbody.velocity.magnitude != 0)
+        {
+            print(_rigidbody.velocity.magnitude);
+        }
+        
 	}
 
 	void MoveByGvrController() {
@@ -48,7 +59,7 @@ public class PacMan : MonoBehaviour {
 				force.x = touchPos.x - 0.5f;
 				force.z = 0.5f - touchPos.y;
 				force.y = 0;
-				_rigidbody.AddRelativeForce (force * 20);
+                _rigidbody.AddRelativeForce(force * 20);
 			}
 		}
 	}
