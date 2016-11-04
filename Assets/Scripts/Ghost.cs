@@ -5,14 +5,14 @@ public class Ghost : MonoBehaviour {
     public float _scaredTime;
     public float _startBlinkTimeAfterScared;
     public float _blinkInterval;
+    public GameObject _base;
 
-	private NavMeshAgent _agent;
+    private NavMeshAgent _agent;
 	private GameObject _pacMan;
     private GameObject _normalGhost;
     private GameObject _scaredGhost;
 	private GameObject _scaredGhostBody;
 	private GameObject _scaredGhostMouth;
-	private GameObject _base;
     private State _state = State.NORMAL;
 
     public enum State
@@ -30,7 +30,6 @@ public class Ghost : MonoBehaviour {
 		_scaredGhost = transform.FindChild("ScaredGhost").gameObject;
 		_scaredGhostBody = _scaredGhost.transform.FindChild ("Body").gameObject;
 		_scaredGhostMouth = _scaredGhost.transform.FindChild ("Mouth").gameObject;
-		_base = GameObject.Find ("BaseOfGhost");
 
     }
 	
